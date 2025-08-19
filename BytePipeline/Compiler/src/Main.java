@@ -1,8 +1,14 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class Main {
-    public static void main(String[] args) {
-        Lexer lexer = new Lexer("tell 1 + 2 + 3;");
+    public static void main(String[] args) throws IOException {
+        System.out.println("write code here:)");
+        BufferedReader reader=new BufferedReader(new InputStreamReader(System.in));
+        String value=reader.readLine();
+
+        Lexer lexer = new Lexer(value);
         Parser parser = new Parser(lexer);
 
         PrintStmt stmt = parser.parsePrint();
