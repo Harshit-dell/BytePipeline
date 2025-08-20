@@ -8,8 +8,12 @@ public class  Interpreter {
         switch (((BinaryExpr)expr).operator){
                 case "+":
                     return  left+right;
-            case "-":
-                    return  left-right;
+                    case "-":
+                        return  left-right;
+            case "*":
+                return left*right;
+            case "/":
+                return  left/right;
         }
         throw new RuntimeException("dikkat hai interpretor mein ");
     }
