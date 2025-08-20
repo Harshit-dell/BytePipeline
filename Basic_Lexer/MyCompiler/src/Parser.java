@@ -15,6 +15,7 @@ class Parser {
         }
     }
     // TODO have to now do operator precedence.
+    //check
     
     // Parse a print statement}
     public PrintStmt parsePrint() {
