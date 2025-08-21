@@ -1,5 +1,12 @@
+# IntelliJ project files
 .idea/
 *.iml
+
+# Build outputs
 out/
 target/
 build/
+
+# OS junk
+.DS_Store
+*.log
