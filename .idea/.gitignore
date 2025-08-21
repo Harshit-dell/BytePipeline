@@ -3,3 +3,11 @@
 /workspace.xml
 # Environment-dependent path to Maven home directory
 /mavenHomeManager.xml
+# Ignore IDE configs
+.idea/
+*.iml
+
+# Ignore build outputs
+out/
+target/
+build/
