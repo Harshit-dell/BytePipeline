@@ -2,7 +2,7 @@ public class Lexer {
     private final String input;
     private  int position =0;
     public Lexer(String value){
-            this.input=value;
+        this.input=value;
     }
 
     private char peek(){
@@ -13,29 +13,19 @@ public class Lexer {
         return  input.charAt(position);
     }
 
+
+
+    //TODO this is main file
     public Token nextToken(){
         while(Character.isWhitespace(peek())){
             position++;
         }
-
+//check if empty
         char current=peek();
         if(current=='\0'){
             return new Token(Token.Type.EOF,"");
         }
-
-        if(Character.isAlphabetic(current)){
-            StringBuilder builder=new StringBuilder();
-            while(Character.isAlphabetic(peek())){
-                builder.append(peek());
-                position++;
-            }
-            if(builder.toString().equals("tell")){
-                return new Token(Token.Type.PRINT,"tell");
-            }
-            throw new RuntimeException("FuCk you"+builder);
-
-        }
-
+//NUMBER
         if(Character.isDigit(current)){
             StringBuilder builder=new StringBuilder();
             while(Character.isDigit(peek())){
@@ -45,20 +35,37 @@ public class Lexer {
             return new Token(Token.Type.NUMBER,builder.toString());
         }
 
-        switch (current) {
-            case '+':
+
+        //Character
+        if(Character.isLetter(current)){
+           StringBuilder builder =new StringBuilder();
+            while(Character.isLetterOrDigit(peek()) || peek()=='_'){
+                builder.append(peek());
                 position++;
-                    return new Token(Token.Type.PLUS, "+");
-            case '-': position++; return new Token(Token.Type.MINUS, "-");
-            case '*': position++; return new Token(Token.Type.STAR, "*");
-            case ';':
-                position++; return new Token(Token.Type.SEMICOLON, ";");
-            case '/':
-                position++; return new Token(Token.Type.SLASH, "/");
+            }
+            String value=builder.toString();
+            if(value.equals("tell")){
+                return  new Token(Token.Type.PRINT,"tell");
+            }
+            else {
+                return  new Token(Token.Type.VARIABLE,value);
+            }
+
         }
 
+
+
+        switch (current) {
+            case '+': position++;return new Token(Token.Type.PLUS, "+");
+            case '-': position++; return new Token(Token.Type.MINUS, "-");
+            case '*': position++; return new Token(Token.Type.STAR, "*");
+            case '/': position++; return new Token(Token.Type.SLASH, "/");
+            case '=': position++; return new Token(Token.Type.EQUALS,"=");
+            case '(': position++; return  new Token(Token.Type.LBRACKET,"(");
+            case ';': position++; return  new Token(Token.Type.SEMICOLON,";");
+            case ')': position++; return  new Token(Token.Type.RBRACKET,")");
+
+        }
         throw new RuntimeException("Write someting meaningfukl"+current);
     }
-
-
 }
