@@ -1,8 +1,8 @@
 public class Token {
     public enum  Type{
-        PRINT, NUMBER, PLUS, MINUS, STAR, SLASH, SEMICOLON, EOF
+        PRINT, NUMBER, PLUS, MINUS,EQUALS, STAR, SLASH, SEMICOLON, EOF , LBRACKET , RBRACKET,VARIABLE
     }
-//    PLUS  +
+    //    PLUS  +
 //    MINUS  -
 //    STAR  *
 //    SLASH  /
@@ -10,10 +10,11 @@ public class Token {
 //    EOF /0
     public final Type type;
     public  final String value;
+// for bracket should i treaet it as new token or what
 
     public Token(Type type,String value){
-            this.type=type;
-            this.value=value;
+        this.type=type;
+        this.value=value;
     }
     @Override
     public String toString(){
