@@ -1,35 +1,29 @@
 # BytePipeline
 
-## Overview
-BytePipeline is a Java-based interpreter for arithmetic expressions and variable assignments. It supports basic operations (`+`, `-`, `*`, `/`), parentheses for precedence, and variable storage with print statements.
+## Project Overview
+**BytePipeline** is a lightweight Java interpreter for evaluating arithmetic expressions and handling variable assignments. It demonstrates the core concepts of building a lexer, parser, and interpreter with proper operator precedence and variable management.
 
 ## Features
-- Lexer: Tokenizes input code
-- Parser: Builds an Abstract Syntax Tree (AST)
-- Interpreter: Evaluates expressions and executes statements
-- Supports variables and arithmetic expressions with proper precedence
+- **Lexer:** Converts raw input into tokens.
+- **Parser:** Constructs an Abstract Syntax Tree (AST) from tokens.
+- **Interpreter:** Evaluates expressions and executes statements.
+- **Variable Support:** Store and use variables within expressions.
+- **Arithmetic Operations:** Handles `+`, `-`, `*`, `/` with proper precedence.
+- **Parentheses:** Supports expressions with brackets for grouping.
 
 ## Getting Started
 1. Clone the repository:
-   
+   ```bash
    git clone https://github.com/Harshit-dell/BytePipeline.git
 
     Navigate to the project directory:
 
 cd BytePipeline
 
-Compile and run:
+Compile the project:
 
-    javac -d out src/**/*.java
-    java -cp out Main
+javac -d out src/**/*.java
 
-    Provide your code in a text file for the interpreter to execute.
+Run the interpreter:
 
-Syntax Examples
-
-    Variable assignment: x = 5;
-
-    Print statement: print x + 3;
-
-    Arithmetic operations: (1 + 2) * 3
-
+java -cp out Main
