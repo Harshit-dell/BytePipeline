@@ -10,3 +10,6 @@ build/
 # OS junk
 .DS_Store
 *.log
+
+# Ignore all compiled class files
+*.class

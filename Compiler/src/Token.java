@@ -1,6 +1,6 @@
 public class Token {
     public enum  Type{
-         PRINT, NUMBER, PLUS, MINUS,EQUALS, STAR, SLASH, SEMICOLON, EOF , LBRACKET , RBRACKET,VARIABLE
+        RCURL,LCURL,PRINT, NUMBER, PLUS, MINUS,EQUALS, STAR, SLASH, SEMICOLON, EOF , LBRACKET , RBRACKET,VARIABLE
     }
     //    PLUS  +
 //    MINUS  -
@@ -18,6 +18,7 @@ public class Token {
     }
     @Override
     public String toString(){
+
         return type +"(" +value +")";
     }
 }

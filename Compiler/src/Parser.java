@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class Parser {
     private final Lexer lexer;
     private Token current;
@@ -11,36 +14,65 @@ class Parser {
         if (current.type == type) {
             current = lexer.nextToken();
         } else {
-            throw new RuntimeException("Expected " + type + " rererere but found " + current.type);
+            throw new RuntimeException("Expected " + type + "  but found (eat-parser)" + current.type);
         }
+    }
+    public List<Stmt> parseProgram() {
+        List<Stmt> program = new ArrayList<>();
+        while (current.type != Token.Type.EOF) {
+            program.add(Starter());   // keep reading statements until end
+        }
+        return program;
     }
 
 
-
-
-    // TODO have to now do operator precedence.
-    public Stmt starter(){
+    private  Stmt Starter(){
         if(current.type==Token.Type.VARIABLE){
+            return   VariableParser();
+        }
+        else if(current.type==Token.Type.PRINT){
+            return parsePrint();
+        }
+        else if(current.type==Token.Type.LCURL){
+            return blockParser();
+        }
+        throw new RuntimeException("starter-parser error (mostly error in the code you wrote )" );
+    }
+
+    // TODO have to now do operator precedence ✔.
+    //TODO add the starter file in the code for parser
+
+    private BlockStmt blockParser(){
+        if(current.type==Token.Type.LCURL){
+            eat(Token.Type.LCURL);
+            List<Stmt> statment=new ArrayList<>();
+            while(current.type!= Token.Type.RCURL && current.type!= Token.Type.EOF){
+                statment.add(Starter());
+            }
+            eat(Token.Type.RCURL);
+            return new BlockStmt(statment);
+        }
+        throw  new RuntimeException("BlockStmt-parser error");
+    }
+
+
+    private  VariableStmt VariableParser(){
             String name=current.value;
             eat(Token.Type.VARIABLE);
             if(current.type==Token.Type.EQUALS){
                 eat(Token.Type.EQUALS);
-                Expr expr  =parseAdditon();
+                Expr expr =parseAdditon();
                 eat(Token.Type.SEMICOLON);
                 return  new VariableStmt(name,expr);
             }
-        }
-        else if(current.type==Token.Type.PRINT){
-            return  parsePrint();
-        }
-        throw  new RuntimeException("started.parser failed");
+        throw new RuntimeException("varibaleparser error");
     }
 
 
 
     // Parse a print statement
     public PrintStmt parsePrint() {
-        eat(current.type);
+        eat(Token.Type.PRINT);
         Expr expr = parseAdditon();
         eat(Token.Type.SEMICOLON);
         return new PrintStmt(expr);
@@ -93,6 +125,7 @@ class Parser {
             Expr value = parseNumber(); // recursively parse after unary
             return new UnaryExpr(operator, value);
         }
+
         else if (current.type == Token.Type.VARIABLE) {
             String name = current.value;
             eat(Token.Type.VARIABLE);

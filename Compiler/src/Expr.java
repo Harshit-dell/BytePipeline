@@ -1,7 +1,10 @@
+import java.awt.image.AreaAveragingScaleFilter;
+import java.util.ArrayList;
+import java.util.List;
+
 // Base class for expressions
-abstract class Expr { }
 abstract  class Stmt {}
-abstract  class Block{}
+abstract class Expr {}
 // Numbers like 1, 2, 42
 
 class VariableStmt extends Stmt {
@@ -19,7 +22,12 @@ class PrintStmt extends Stmt {
     Expr expr;
     PrintStmt(Expr expr) { this.expr = expr; }
 }
-
+class BlockStmt extends Stmt{
+    public  final  List<Stmt> statement;
+    BlockStmt(List<Stmt> statements) {
+        this.statement= statements;
+    }
+}
 
 
 class UnaryExpr extends  Expr{

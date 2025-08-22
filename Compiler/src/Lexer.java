@@ -70,8 +70,8 @@ public class Lexer {
             case '(': position++; return  new Token(Token.Type.LBRACKET,"(");
             case ';': position++; return  new Token(Token.Type.SEMICOLON,";");
             case ')': position++; return  new Token(Token.Type.RBRACKET,")");
-//            case '}': position++; return new Token(Token.Type.RCURL,"}");
-//            case '{': position++; return new Token(Token.Type.LCURL,"{");
+            case '}': position++; return new Token(Token.Type.RCURL,"}");
+            case '{': position++; return new Token(Token.Type.LCURL,"{");
 
          }
         throw new RuntimeException("Write someting meaningfukl"+current);

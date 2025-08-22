@@ -1,17 +1,58 @@
-import java.util.HashMap;
+
+import java.util.*;
 
 public class Interpreter {
     private final HashMap<String, Integer> variableStore = new HashMap<>();
 
+    public void execute(List<Stmt> ListStmt ) {
+        for(Stmt stmt:ListStmt){
+            check(stmt);
+        }
+    }
+
+    private  void check(Stmt stmt){
+        if (stmt instanceof VariableStmt) {
+            int value = evaluate(((VariableStmt) stmt).value);
+            variableStore.put(((VariableStmt) stmt).name, value);
+        }
+        else if (stmt instanceof PrintStmt) {
+            int value = evaluate(((PrintStmt) stmt).expr);
+            System.out.println("Output is :");
+            System.out.println(value);
+        }
+        else if(stmt instanceof BlockStmt){
+            executeBlock((BlockStmt)stmt);
+        }
+        else {
+            throw new RuntimeException("Check-Interpreter fault");
+        }
+    }
+    private  void executeBlock (BlockStmt stmt ){
+        HashMap<String, Integer> store = variableStore;
+        try{
+            for(Stmt qwe:stmt.statement){
+                check(qwe);
+            }
+        }finally {
+            variableStore.clear();
+            variableStore.putAll(store);
+        }
+    }
+
+
+
+    // Execute statements (VariableStmt or PrintStmt)
+
+
     // Evaluate expressions recursively
-    public int evaluate(Expr expr) {
+    private int evaluate(Expr expr) {
         if (expr instanceof NumberExpr) {
             return ((NumberExpr) expr).value;
         }
         else if (expr instanceof VariableExpr) {
             String name = ((VariableExpr) expr).name;
             if (!variableStore.containsKey(name)) {
-                throw new RuntimeException("Variable -> " + name + " is not defined");
+                throw new RuntimeException("Variable -> " + name + " is not defined  evalute-interpreter");
             }
             return variableStore.get(name);
         }
@@ -40,18 +81,4 @@ public class Interpreter {
         throw new RuntimeException("Interpreter error: unknown expression type");
     }
 
-    // Execute statements (VariableStmt or PrintStmt)
-    public void execute(Stmt stmt) {
-        if (stmt instanceof VariableStmt) {
-            int value = evaluate(((VariableStmt) stmt).value);
-            variableStore.put(((VariableStmt) stmt).name, value);
-        }
-        else if (stmt instanceof PrintStmt) {
-            int value = evaluate(((PrintStmt) stmt).expr);
-            System.out.println(value);
-        }
-        else {
-            throw new RuntimeException("Interpreter fault: unknown statement");
-        }
-    }
 }
