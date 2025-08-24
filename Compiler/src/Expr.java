@@ -7,6 +7,20 @@ abstract  class Stmt {}
 abstract class Expr {}
 // Numbers like 1, 2, 42
 
+class IfElse extends  Stmt{
+    final Expr Condition;
+    final Stmt ifBlock;
+    final Stmt elseBlock;
+    IfElse(Expr a,Stmt b,Stmt c){
+        this.Condition=a;
+        this.ifBlock=b;
+        this.elseBlock=c;
+
+    }
+
+}
+
+
 class VariableStmt extends Stmt {
     String name;
     Expr value;

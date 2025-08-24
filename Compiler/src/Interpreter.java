@@ -2,7 +2,7 @@
 import java.util.*;
 
 public class Interpreter {
-    private final HashMap<String, Integer> variableStore = new HashMap<>();
+    private  HashMap<String, Integer> variableStore = new HashMap<>();
 
     public void execute(List<Stmt> ListStmt ) {
         for(Stmt stmt:ListStmt){
@@ -17,28 +17,40 @@ public class Interpreter {
         }
         else if (stmt instanceof PrintStmt) {
             int value = evaluate(((PrintStmt) stmt).expr);
-            System.out.println("Output is :");
+            System.out.print("Output is :");
             System.out.println(value);
         }
         else if(stmt instanceof BlockStmt){
             executeBlock((BlockStmt)stmt);
         }
+        else  if(stmt instanceof IfElse){
+            executeFlipFlop((IfElse)stmt);
+        }
         else {
             throw new RuntimeException("Check-Interpreter fault");
         }
     }
-    private  void executeBlock (BlockStmt stmt ){
-        HashMap<String, Integer> store = variableStore;
-        try{
-            for(Stmt qwe:stmt.statement){
+    private  void executeFlipFlop(IfElse stmt){
+              int condValue = evaluate(stmt.Condition);
+              if (condValue != 0) {
+                  check(stmt.ifBlock);
+              } else if (stmt.elseBlock != null) {
+                  check(stmt.elseBlock);
+              }
+    }
+    private void executeBlock(BlockStmt stmt) {
+        HashMap<String, Integer> previous = new HashMap<>(variableStore);
+
+        try {
+            variableStore = new HashMap<>(previous);
+
+            for (Stmt qwe : stmt.statement) {
                 check(qwe);
             }
-        }finally {
-            variableStore.clear();
-            variableStore.putAll(store);
+        } finally {
+            variableStore = previous;
         }
     }
-
 
 
     // Execute statements (VariableStmt or PrintStmt)
@@ -64,20 +76,25 @@ public class Interpreter {
             return value;
 
         }
-
         else if (expr instanceof BinaryExpr) {
             BinaryExpr bin = (BinaryExpr) expr;
-            int leftVal = evaluate(bin.left);
-            int rightVal = evaluate(bin.right);
-            switch (bin.operator) {
-                case "+": return leftVal + rightVal;
-                case "-": return leftVal - rightVal;
-                case "*": return leftVal * rightVal;
-                case "/": return leftVal / rightVal;
-                default:
-                    throw new RuntimeException("Unknown operator: " + bin.operator);
-            }
+            int left = evaluate(bin.left);
+            int right = evaluate(bin.right);
+            return switch (bin.operator) {
+                case "+" -> left + right;
+                case "-" -> left - right;
+                case "*" -> left * right;
+                case "/" -> left / right;
+                case "<" -> (left < right) ? 1 : 0;
+                case "<=" -> (left <= right) ? 1 : 0;
+                case ">" -> (left > right) ? 1 : 0;
+                case ">=" -> (left >= right) ? 1 : 0;
+                case "==" -> (left == right) ? 1 : 0;
+                case "!=" -> (left != right) ? 1 : 0;
+                default -> throw new RuntimeException("Unknown operator " + bin.operator);
+            };
         }
+
         throw new RuntimeException("Interpreter error: unknown expression type");
     }
 

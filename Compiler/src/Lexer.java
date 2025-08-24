@@ -15,7 +15,7 @@ public class Lexer {
     //debugger
     private Token makeToken(Token.Type type,String value){
         Token t=new Token(type,value);
-        System.out.println("TOKEN: " + t.type + t.value);
+        System.out.println("TOKEN: " + t.type +"  " +t.value);
         return t;
     }
 
@@ -50,34 +50,61 @@ public class Lexer {
                 position++;
             }
             String value=builder.toString();
-            if(value.equals("tell")){
-                return  makeToken(Token.Type.PRINT,"tell");
-            }
-//            else if(builder.equals("agar")){
-//                return  new Token(Token.Type.IF,"warna");
-//            }
-//            else if(builder.equals("warna")){
-//                return  new Token(Token.Type.ELSE,"warna");
-//            }
-            else {
-                return  makeToken(Token.Type.VARIABLE,value);
-            }
-
+            return switch (value) {
+                case "tell" -> makeToken(Token.Type.PRINT, "tell");
+                case "flip" -> new Token(Token.Type.IF, "flip");
+                case "flop" -> new Token(Token.Type.ELSE, "flop");
+                default -> makeToken(Token.Type.VARIABLE, value);
+            };
         }
-
-
 
         switch (current) {
             case '+': position++;return makeToken(Token.Type.PLUS, "+");
             case '-': position++; return makeToken(Token.Type.MINUS, "-");
             case '*': position++; return makeToken(Token.Type.STAR, "*");
             case '/': position++; return makeToken(Token.Type.SLASH, "/");
-            case '=': position++; return makeToken(Token.Type.EQUALS,"=");
             case '(': position++; return  makeToken(Token.Type.LBRACKET,"(");
             case ';': position++; return  makeToken(Token.Type.SEMICOLON,";");
             case ')': position++; return  makeToken(Token.Type.RBRACKET,")");
             case '}': position++; return makeToken(Token.Type.RCURL,"}");
             case '{': position++; return makeToken(Token.Type.LCURL,"{");
+            case '=':
+                position++;
+                if(peek()=='='){
+                    position++;
+                    return makeToken(Token.Type.EQUAL_EQUAL,"==");
+                }
+                else{
+                    return  makeToken(Token.Type.EQUALS,"=");
+                }
+            case '<':
+                position++;
+                if(peek()=='='){
+                        position++;
+                     return makeToken(Token.Type.LESS_EQUAL,"<=");
+                }
+                else{
+                    return  makeToken(Token.Type.LESS,"<");
+                }
+            case '>':
+                position++;
+                if(peek()=='='){
+                    position++;
+                    return makeToken(Token.Type.BIGGER_EQUAL,">=");
+                }
+                else{
+                    return  makeToken(Token.Type.BIGGER,">");
+                }
+            case '!':
+                position++;
+                if(peek()=='='){
+                    position++;
+                    return  makeToken(Token.Type.NOT_EQUAL,"!=");
+                }
+                else {
+                    throw new RuntimeException(""" 
+                            Havent worked on "!" on this""");
+                }
 
         }
         throw new RuntimeException("Write someting meaningfukl"+current);
