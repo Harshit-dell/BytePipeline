@@ -54,6 +54,7 @@ public class Lexer {
                 case "tell" -> makeToken(Token.Type.PRINT, "tell");
                 case "flip" -> new Token(Token.Type.IF, "flip");
                 case "flop" -> new Token(Token.Type.ELSE, "flop");
+                case "spin" -> new Token(Token.Type.WHILE,"spin");
                 default -> makeToken(Token.Type.VARIABLE, value);
             };
         }

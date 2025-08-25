@@ -7,6 +7,18 @@ abstract  class Stmt {}
 abstract class Expr {}
 // Numbers like 1, 2, 42
 
+
+class SpinStmt extends  Stmt{
+    final Expr Condtion;
+    final Stmt spinBlock;
+    SpinStmt(Expr condtion,Stmt spinBlock){
+        this.Condtion=condtion;
+        this.spinBlock=spinBlock;
+    }
+}
+
+
+
 class IfElse extends  Stmt{
     final Expr Condition;
     final Stmt ifBlock;

@@ -26,10 +26,27 @@ public class Interpreter {
         else  if(stmt instanceof IfElse){
             executeFlipFlop((IfElse)stmt);
         }
+        else if (stmt instanceof SpinStmt) {
+            executeSpin((SpinStmt) stmt);
+        }
         else {
             throw new RuntimeException("Check-Interpreter fault");
         }
     }
+
+    private void executeSpin(SpinStmt stmt){
+        try {
+            while (evaluate(stmt.Condtion) != 0) {
+                check(stmt.spinBlock);
+            }
+        } catch (Exception e) {
+            System.out.printf("new code" + e.getMessage());
+        }
+    }
+
+
+
+
     private  void executeFlipFlop(IfElse stmt){
               int condValue = evaluate(stmt.Condition);
               if (condValue != 0) {
@@ -85,6 +102,7 @@ public class Interpreter {
                 case "-" -> left - right;
                 case "*" -> left * right;
                 case "/" -> left / right;
+
                 case "<" -> (left < right) ? 1 : 0;
                 case "<=" -> (left <= right) ? 1 : 0;
                 case ">" -> (left > right) ? 1 : 0;

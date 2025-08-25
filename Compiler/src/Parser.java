@@ -9,11 +9,6 @@ class Parser{
         this.lexer = lexer;
         this.current = lexer.nextToken();
     }
-
-
-
-
-
     private void eat(Token.Type type) {
         if (current.type == type) {
             current = lexer.nextToken();
@@ -42,7 +37,18 @@ class Parser{
         else if(current.type==Token.Type.IF ){
             return  parseIf();
         }
+        else if (current.type == Token.Type.WHILE) {
+            return parsewhile();
+        }
         throw new RuntimeException("starter-parser error (mostly error in the code you wrote )" );
+    }
+    private  Stmt parsewhile(){
+        eat(Token.Type.WHILE);
+        eat(Token.Type.LBRACKET);
+        Expr condtion=parseCondition();
+        eat(Token.Type.RBRACKET);
+        Stmt block=blockParser();
+        return  new SpinStmt(condtion,block);
     }
     private  Stmt parseIf(){
         eat(Token.Type.IF);
