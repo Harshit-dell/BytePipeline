@@ -37,10 +37,15 @@ public class Interpreter {
     private void executeSpin(SpinStmt stmt){
         try {
             while (evaluate(stmt.Condtion) != 0) {
-                check(stmt.spinBlock);
+                executeBlock_Varibalechange((BlockStmt) stmt.spinBlock);
             }
         } catch (Exception e) {
             System.out.printf("new code" + e.getMessage());
+        }
+    }
+    private void executeBlock_Varibalechange(BlockStmt stmt){
+        for (Stmt qwe : stmt.statement) {
+            check(qwe);
         }
     }
 
@@ -74,7 +79,7 @@ public class Interpreter {
 
 
     // Evaluate expressions recursively
-    private int evaluate(Expr expr) {
+    private int  evaluate(Expr expr) {
         if (expr instanceof NumberExpr) {
             return ((NumberExpr) expr).value;
         }
