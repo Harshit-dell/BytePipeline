@@ -1,5 +1,7 @@
 # BytePipeline
 
+## IDEA-Configurable Syntax Compiler Framework
+
 ## Project Overview
 **BytePipeline** is a lightweight Java interpreter for evaluating arithmetic expressions and handling variable assignments. It demonstrates the core concepts of building a lexer, parser, and interpreter with proper operator precedence and variable management.
 
@@ -8,8 +10,7 @@
 - **Parser:** Constructs an Abstract Syntax Tree (AST) from tokens.
 - **Interpreter:** Evaluates expressions and executes statements.
 - **Variable Support:** Store and use variables within expressions.
-- **Arithmetic Operations:** Handles `+`, `-`, `*`, `/` with proper precedence.
-- **Parentheses:** Supports expressions with brackets for grouping.
+- **Support:** variable,function,loop,Mathametic operators, unary operator, and many more 
 
 ## Getting Started
 1. Clone the repository:
@@ -27,3 +28,6 @@ javac -d out src/**/*.java
 Run the interpreter:
 
 java -cp out Main
+
+# Personal overview
+   The idea for making this framework was that i always wonder who this weird syntax. By this you can write your weird syntax :) 
