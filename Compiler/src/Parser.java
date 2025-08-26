@@ -1,6 +1,17 @@
 import java.util.ArrayList;
 import java.util.List;
 
+
+class Pair <V,K>{
+    V First;
+    K Second;
+    Pair(V first,K second){
+        this.First=first;
+        this.Second=second;
+    }
+}
+
+
 class Parser{
     private final Lexer lexer;
     private Token current;
@@ -40,8 +51,35 @@ class Parser{
         else if (current.type == Token.Type.WHILE) {
             return parsewhile();
         }
+        else if (current.type ==Token.Type.FUN){
+            return parseFunDlc();
+        }
+        else
         throw new RuntimeException("starter-parser error (mostly error in the code you wrote )" );
     }
+
+    private FunctionDelc parseFunDlc(){
+        eat(Token.Type.FUN);
+        String name=current.value;
+        eat(Token.Type.VARIABLE);
+        eat(Token.Type.LBRACKET);
+        List<String> parameter= new ArrayList<>();
+        while(current.type ==Token.Type.VARIABLE){
+            parameter.add(current.value);
+            eat(current.type);
+            if(current.type==Token.Type.COMA){
+                eat(Token.Type.COMA);
+            }
+        }
+        eat(Token.Type.RBRACKET);
+        List<Stmt> block =parseProgram();
+        return new FunctionDelc(name,parameter,block);
+    }
+
+
+
+
+
     private  Stmt parsewhile(){
         eat(Token.Type.WHILE);
         eat(Token.Type.LBRACKET);
@@ -186,6 +224,19 @@ private Expr parseNumber() {
     else if (current.type == Token.Type.VARIABLE) {
         String name = current.value;
         eat(Token.Type.VARIABLE);
+        if (current.type == Token.Type.LBRACKET) {
+            eat(Token.Type.LBRACKET);
+            List<Expr> args = new ArrayList<>();
+            if (current.type != Token.Type.RBRACKET) {
+                args.add(parseAdditon()); // first arg
+                while (current.type == Token.Type.COMA) {
+                    eat(Token.Type.COMA);
+                    args.add(parseAdditon()); // more args
+                }
+            }
+            eat(Token.Type.RBRACKET);
+            return new FunctionCall(name, args);
+        }
         return new VariableExpr(name);
     }
     else if (current.type == Token.Type.LBRACKET) {

@@ -55,6 +55,7 @@ public class Lexer {
                 case "flip" -> new Token(Token.Type.IF, "flip");
                 case "flop" -> new Token(Token.Type.ELSE, "flop");
                 case "spin" -> new Token(Token.Type.WHILE,"spin");
+                case "fun"-> new Token(Token.Type.FUN,"fun");
                 default -> makeToken(Token.Type.VARIABLE, value);
             };
         }
@@ -69,6 +70,7 @@ public class Lexer {
             case ')': position++; return  makeToken(Token.Type.RBRACKET,")");
             case '}': position++; return makeToken(Token.Type.RCURL,"}");
             case '{': position++; return makeToken(Token.Type.LCURL,"{");
+            case ',': position++; return makeToken(Token.Type.COMA,",");
             case '=':
                 position++;
                 if(peek()=='='){

@@ -7,6 +7,19 @@ abstract  class Stmt {}
 abstract class Expr {}
 // Numbers like 1, 2, 42
 
+class FunctionDelc extends  Stmt{
+    String name;
+    List<String> parameter;
+    List<Stmt> block;
+    FunctionDelc(String name,List<String > a,List<Stmt> b){
+        this.name=name;
+        this.parameter=a;
+        this.block=b;
+    }
+
+}
+
+
 
 class SpinStmt extends  Stmt{
     final Expr Condtion;
@@ -55,6 +68,14 @@ class BlockStmt extends Stmt{
     }
 }
 
+    class FunctionCall extends Expr {
+    String name;
+    List<Expr> arguments;
+    FunctionCall(String name, List<Expr> args) {
+        this.name = name;
+        this.arguments = args;
+    }
+}
 
 class UnaryExpr extends  Expr{
     String operator;

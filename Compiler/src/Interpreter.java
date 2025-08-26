@@ -1,9 +1,7 @@
-
 import java.util.*;
-
 public class Interpreter {
     private  HashMap<String, Integer> variableStore = new HashMap<>();
-
+    private  HashMap<String,Pair<List<String>,List<Stmt>>> functionStore=new HashMap<>();
     public void execute(List<Stmt> ListStmt ) {
         for(Stmt stmt:ListStmt){
             check(stmt);
@@ -29,10 +27,24 @@ public class Interpreter {
         else if (stmt instanceof SpinStmt) {
             executeSpin((SpinStmt) stmt);
         }
+        else if(stmt instanceof  FunctionDelc){
+            FunctionDelc function=((FunctionDelc)stmt);
+            if(functionStore.containsKey(function.name)){
+                System.out.println("This is future work");
+                throw  new RuntimeException("havent worked on function override method");
+            }
+            else{
+                functionStore.put(function.name,new Pair<>(function.parameter,function.block));
+            }
+        }
+
         else {
             throw new RuntimeException("Check-Interpreter fault");
         }
     }
+
+
+
 
     private void executeSpin(SpinStmt stmt){
         try {
@@ -48,10 +60,6 @@ public class Interpreter {
             check(qwe);
         }
     }
-
-
-
-
     private  void executeFlipFlop(IfElse stmt){
               int condValue = evaluate(stmt.Condition);
               if (condValue != 0) {
@@ -82,6 +90,9 @@ public class Interpreter {
     private int  evaluate(Expr expr) {
         if (expr instanceof NumberExpr) {
             return ((NumberExpr) expr).value;
+        }
+        else if(expr instanceof  FunctionCall){
+            throw new RuntimeException("Working on this code");
         }
         else if (expr instanceof VariableExpr) {
             String name = ((VariableExpr) expr).name;
