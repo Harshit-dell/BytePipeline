@@ -55,7 +55,7 @@ public class Lexer {
                 case "flip" -> new Token(Token.Type.IF, "flip");
                 case "flop" -> new Token(Token.Type.ELSE, "flop");
                 case "spin" -> new Token(Token.Type.WHILE,"spin");
-                case "func"-> new Token(Token.Type.FUN,"func");
+                case "fun"-> new Token(Token.Type.FUN,"fun");
                 default -> makeToken(Token.Type.VARIABLE, value);
             };
         }
@@ -71,6 +71,19 @@ public class Lexer {
             case '}': position++; return makeToken(Token.Type.RCURL,"}");
             case '{': position++; return makeToken(Token.Type.LCURL,"{");
             case ',': position++; return makeToken(Token.Type.COMA,",");
+            case '"':
+                    position++;
+                    StringBuilder builder=new StringBuilder();
+                    char temp=peek();
+                    while (position < input.length() && peek() != '"') {
+                        builder.append(peek());
+                        position++;
+                    }
+                if (position >= input.length()) {
+                    throw new RuntimeException("ache se Likho string");
+                }
+                        position++;
+                    return  makeToken(Token.Type.STRING,builder.toString());
             case '=':
                 position++;
                 if(peek()=='='){

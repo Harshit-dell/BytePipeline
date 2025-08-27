@@ -1,44 +1,48 @@
 import java.util.*;
-public class  Interpreter {
-    private  HashMap<String, Integer> variableStore = new HashMap<>();
-    private  HashMap<String,Pair<List<String>,List<Stmt>>> functionStore=new HashMap<>();
-    public void execute(List<Stmt> ListStmt ) {
-        for(Stmt stmt:ListStmt){
+
+public class Interpreter {
+    private HashMap<String, Object> variableStore = new HashMap<>();
+    private HashMap<String, Pair<List<String>, List<Stmt>>> functionStore = new HashMap<>();
+    public void execute(List<Stmt> ListStmt) {
+        for (Stmt stmt : ListStmt) {
             check(stmt);
         }
     }
 
-    private  void check(Stmt stmt){
+    private void check(Stmt stmt) {
         if (stmt instanceof VariableStmt) {
-            int value = evaluate(((VariableStmt) stmt).value);
+            Object value = evaluate(((VariableStmt) stmt).value);
             variableStore.put(((VariableStmt) stmt).name, value);
         }
+
         else if (stmt instanceof PrintStmt) {
-            int value = evaluate(((PrintStmt) stmt).expr);
-            System.out.print("Output is :");
+            Object value = evaluate(((PrintStmt) stmt).expr);
+            System.out.print("Output is : ");
             System.out.println(value);
         }
-        else if(stmt instanceof BlockStmt){
-            executeBlock((BlockStmt)stmt);
+
+        else if (stmt instanceof BlockStmt) {
+            executeBlock((BlockStmt) stmt);
         }
-        else  if(stmt instanceof IfElse){
-            executeFlipFlop((IfElse)stmt);
+
+        else if (stmt instanceof IfElse) {
+            executeFlipFlop((IfElse) stmt);
         }
+
         else if (stmt instanceof SpinStmt) {
             executeSpin((SpinStmt) stmt);
         }
-        else if(stmt instanceof  FunctionDelc){
-            FunctionDelc function=((FunctionDelc)stmt);
-            if(functionStore.containsKey(function.name)){
-                System.out.println("This is future work");
-                throw  new RuntimeException("havent worked on function override method");
-            }
 
-            else{
-                functionStore.put(function.name,new Pair<>(function.parameter,function.block));
+        else if (stmt instanceof FunctionDelc) {
+            FunctionDelc function = ((FunctionDelc) stmt);
+            if (functionStore.containsKey(function.name)) {
+                throw new RuntimeException("Function already defined: " + function.name);
+            } else {
+                functionStore.put(function.name, new Pair<>(function.parameter, function.block));
             }
         }
-        else if(stmt instanceof  ExprStmt){
+
+        else if (stmt instanceof ExprStmt) {
             evaluate(((ExprStmt) stmt).expr);
         }
 
@@ -47,37 +51,35 @@ public class  Interpreter {
         }
     }
 
-
-
-
-    private void executeSpin(SpinStmt stmt){
+    private void executeSpin(SpinStmt stmt) {
         try {
-            while (evaluate(stmt.Condtion) != 0) {
+            while (toInt(evaluate(stmt.Condtion)) != 0) {
                 executeBlock_Varibalechange((BlockStmt) stmt.spinBlock);
             }
         } catch (Exception e) {
             System.out.printf("new code" + e.getMessage());
         }
     }
-    private void executeBlock_Varibalechange(BlockStmt stmt){
+
+    private void executeBlock_Varibalechange(BlockStmt stmt) {
         for (Stmt qwe : stmt.statement) {
             check(qwe);
         }
     }
-    private  void executeFlipFlop(IfElse stmt){
-              int condValue = evaluate(stmt.Condition);
-              if (condValue != 0) {
-                  check(stmt.ifBlock);
-              } else if (stmt.elseBlock != null) {
-                  check(stmt.elseBlock);
-              }
-    }
-    private void executeBlock(BlockStmt stmt) {
-        HashMap<String, Integer> previous = new HashMap<>(variableStore);
 
+    private void executeFlipFlop(IfElse stmt) {
+        int condValue = toInt(evaluate(stmt.Condition));
+        if (condValue != 0) {
+            check(stmt.ifBlock);
+        } else if (stmt.elseBlock != null) {
+            check(stmt.elseBlock);
+        }
+    }
+
+    private void executeBlock(BlockStmt stmt) {
+        HashMap<String, Object> previous = new HashMap<>(variableStore);
         try {
             variableStore = new HashMap<>(previous);
-
             for (Stmt qwe : stmt.statement) {
                 check(qwe);
             }
@@ -86,46 +88,46 @@ public class  Interpreter {
         }
     }
 
-
-    // Execute statements (VariableStmt or PrintStmt)
-
-
-    // Evaluate expressions recursively
-    private int  evaluate(Expr expr) {
+    private Object evaluate(Expr expr) {
         if (expr instanceof NumberExpr) {
             return ((NumberExpr) expr).value;
         }
-        else if(expr instanceof  FunctionCall){
-            FunctionCall temp=(FunctionCall)expr;
-            String name=temp.name;
-            List<Expr> argument=temp.arguments;
 
-            if(!functionStore.containsKey(name)){
+        else if (expr instanceof StringExpr) {
+            return ((StringExpr) expr).value;
+        }
+
+        else if (expr instanceof FunctionCall) {
+            FunctionCall temp = (FunctionCall) expr;
+            String name = temp.name;
+            List<Expr> argument = temp.arguments;
+
+            if (!functionStore.containsKey(name)) {
                 throw new RuntimeException("Function -> " + name + " not defined");
             }
 
-            Pair<List<String>, List<Stmt>> function=functionStore.get(name);
-            List<String> parameter=function.First;
-            List<Stmt> block=function.Second;
+            Pair<List<String>, List<Stmt>> function = functionStore.get(name);
+            List<String> parameter = function.First;
+            List<Stmt> block = function.Second;
 
-            if(parameter.size()!=argument.size()){
+            if (parameter.size() != argument.size()) {
                 throw new RuntimeException("Argument count mismatch in function call -> " + name);
             }
 
-            HashMap<String,Integer> tempStorage=new HashMap<>(variableStore);
+            HashMap<String, Object> tempStorage = new HashMap<>(variableStore);
 
-            for(int i=0;i<parameter.size();i++){
-                int value=evaluate(argument.get(i));
-                variableStore.put(parameter.get(i),value);
+            for (int i = 0; i < parameter.size(); i++) {
+                Object value = evaluate(argument.get(i));
+                variableStore.put(parameter.get(i), value);
             }
 
             executeBlock(new BlockStmt(block));
 
-            variableStore=tempStorage;
+            variableStore = tempStorage;
 
             return 0;
-
         }
+
         else if (expr instanceof VariableExpr) {
             String name = ((VariableExpr) expr).name;
             if (!variableStore.containsKey(name)) {
@@ -135,16 +137,23 @@ public class  Interpreter {
         }
         else if (expr instanceof UnaryExpr) {
             UnaryExpr unary = (UnaryExpr) expr;
-            int value=evaluate(unary.value);
-            String operator= unary.operator;
-            if(operator.equals("-")) return -value;
+            int value = toInt(evaluate(unary.value));
+            if (unary.operator.equals("-")) return -value;
             return value;
-
         }
         else if (expr instanceof BinaryExpr) {
             BinaryExpr bin = (BinaryExpr) expr;
-            int left = evaluate(bin.left);
-            int right = evaluate(bin.right);
+            Object leftObj = evaluate(bin.left);
+            Object rightObj = evaluate(bin.right);
+
+            // String concatenation
+            if (bin.operator.equals("+") && (leftObj instanceof String || rightObj instanceof String)) {
+                return String.valueOf(leftObj) + String.valueOf(rightObj);
+            }
+
+            int left = toInt(leftObj);
+            int right = toInt(rightObj);
+
             return switch (bin.operator) {
                 case "+" -> left + right;
                 case "-" -> left - right;
@@ -164,4 +173,17 @@ public class  Interpreter {
         throw new RuntimeException("Interpreter error: unknown expression type");
     }
 
+    private int toInt(Object obj) {
+        //just rechecking agr phele se int aya ho toh
+        if (obj instanceof Integer) return (Integer) obj;
+        //here the problem is , and sometime i need the int as string as sometime int as string
+        if (obj instanceof String) {
+            try {
+                return Integer.parseInt((String) obj);
+            } catch (NumberFormatException e) {
+                return ((String) obj).isEmpty() ? 0 : 1; // non-empty string treated as true
+            }
+        }
+        throw new RuntimeException("Cannot convert to int: " + obj);
+    }
 }

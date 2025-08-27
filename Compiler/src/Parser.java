@@ -44,9 +44,9 @@ class Parser{
         else if (current.type ==Token.Type.FUN){
             return parseFunDlc();
         }
-        else
         throw new RuntimeException("starter-parser error (mostly error in the code you wrote )" );
     }
+
 
     private FunctionDelc parseFunDlc(){
         eat(Token.Type.FUN);
@@ -216,13 +216,17 @@ private Expr parseNumber() {
         eat(Token.Type.NUMBER);
         return new NumberExpr(value);
     }
+    if (current.type == Token.Type.STRING) {
+        String value = current.value;
+        eat(Token.Type.STRING);
+        return new StringExpr(value);
+    }
     if(current.type == Token.Type.MINUS || current.type == Token.Type.PLUS){
         String operator = current.value;
         eat(current.type);
         Expr value = parseNumber(); // recursively parse after unary
         return new UnaryExpr(operator, value);
     }
-
     else if (current.type == Token.Type.VARIABLE) {
         String name = current.value;
         eat(Token.Type.VARIABLE);
