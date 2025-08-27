@@ -1,29 +1,86 @@
 # BytePipeline
 
+## IDEA-Configurable Syntax Compiler Framework (Experimental)
+
+BytePipeline is an experimental module and tooling designed to help you quickly test grammar changes and run small programs. Its purpose is to prototype language features faster using IDE aids (such as token visualizers and small test harnesses).
+
+**Status:** Experimental — intended as a developer tool for iterating on language syntax and parser behavior. This is **not** yet a polished product.
+
+**Goal:** Make it easy to experiment with syntax changes and evaluate parser behavior without repeatedly editing core code.
+
+---
+
 ## Project Overview
-**BytePipeline** is a lightweight Java interpreter for evaluating arithmetic expressions and handling variable assignments. It demonstrates the core concepts of building a lexer, parser, and interpreter with proper operator precedence and variable management.
+
+BytePipeline is a lightweight interpreter written in pure Java. It demonstrates the core building blocks of a programming language — from lexing and parsing to AST construction and interpretation.
+
+Originally designed for arithmetic evaluation, BytePipeline has evolved into a mini-language that supports:
+
+- **Variables**
+- **Functions**
+- **Control flow** (if/else, spin loops)
+- **Blocks & scoping**
+- **Function calls**
+- **IDE-integrated tooling** (experimental) via an IDEA-configurable syntax framework
+
+> This project is not about frameworks — it’s about understanding how languages work from scratch.
+
+---
 
 ## Features
-- **Lexer:** Converts raw input into tokens.
-- **Parser:** Constructs an Abstract Syntax Tree (AST) from tokens.
-- **Interpreter:** Evaluates expressions and executes statements.
-- **Variable Support:** Store and use variables within expressions.
-- **Arithmetic Operations:** Handles `+`, `-`, `*`, `/` with proper precedence.
-- **Parentheses:** Supports expressions with brackets for grouping.
 
-## Getting Started
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Harshit-dell/BytePipeline.git
+### Lexer
+- Tokenizes raw input into identifiers, numbers, operators, keywords, and symbols.
 
-    Navigate to the project directory:
+### Parser
+- Builds an Abstract Syntax Tree (AST) for expressions and statements.
+- Handles operator precedence, grouping, and nested structures.
 
-cd BytePipeline
+### Interpreter
+- Walks the AST and executes code.
+- Supports variable binding, function execution, and condition evaluation.
 
-Compile the project:
+### Statements
+- Variable declaration & assignment
+- Print statements
+- Blocks `{ ... }`
+- If/Else branching
+- Spin loops (like `while`)
 
-javac -d out src/**/*.java
+### Functions
+- Function declarations with parameters
+- Function calls with arguments
 
-Run the interpreter:
+### Expressions
+- Arithmetic (`+`, `-`, `*`, `/`)
+- Unary (`+`, `-`)
+- Variables & numbers
+- Function call as expression
 
-java -cp out Main
+---
+
+## Design Overview
+
+**Flow:**  
+`Source → Lexer → Tokens → Parser → AST → Interpreter → Program Output`
+
+- **Lexer:** Splits text into tokens (numbers, identifiers, operators)
+- **Parser:** Builds AST nodes (statements & expressions)
+- **Interpreter:** Evaluates AST nodes, managing a variable store and function store
+
+---
+
+## Personal Note
+
+BytePipeline began as a learning project — a way to understand how languages work under the hood. A few days later, I decided to push beyond simple arithmetic and make it more capable. I also started an IDEA-Configurable Syntax Compiler Framework as an experimental tool so I could iterate grammar changes quickly inside IntelliJ IDEA.
+
+This repository is a learning playground — not a production language — but it’s a great way to build deep, transferable knowledge.
+
+This is Part of Some other Big Project.
+
+---
+
+## To Run
+
+- Fork the repository
+- Run the `Main` file in your Java compiler or IDE

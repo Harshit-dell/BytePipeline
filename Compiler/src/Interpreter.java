@@ -1,5 +1,5 @@
 import java.util.*;
-public class Interpreter {
+public class  Interpreter {
     private  HashMap<String, Integer> variableStore = new HashMap<>();
     private  HashMap<String,Pair<List<String>,List<Stmt>>> functionStore=new HashMap<>();
     public void execute(List<Stmt> ListStmt ) {
@@ -33,9 +33,13 @@ public class Interpreter {
                 System.out.println("This is future work");
                 throw  new RuntimeException("havent worked on function override method");
             }
+
             else{
                 functionStore.put(function.name,new Pair<>(function.parameter,function.block));
             }
+        }
+        else if(stmt instanceof  ExprStmt){
+            evaluate(((ExprStmt) stmt).expr);
         }
 
         else {
@@ -92,7 +96,35 @@ public class Interpreter {
             return ((NumberExpr) expr).value;
         }
         else if(expr instanceof  FunctionCall){
-            throw new RuntimeException("Working on this code");
+            FunctionCall temp=(FunctionCall)expr;
+            String name=temp.name;
+            List<Expr> argument=temp.arguments;
+
+            if(!functionStore.containsKey(name)){
+                throw new RuntimeException("Function -> " + name + " not defined");
+            }
+
+            Pair<List<String>, List<Stmt>> function=functionStore.get(name);
+            List<String> parameter=function.First;
+            List<Stmt> block=function.Second;
+
+            if(parameter.size()!=argument.size()){
+                throw new RuntimeException("Argument count mismatch in function call -> " + name);
+            }
+
+            HashMap<String,Integer> tempStorage=new HashMap<>(variableStore);
+
+            for(int i=0;i<parameter.size();i++){
+                int value=evaluate(argument.get(i));
+                variableStore.put(parameter.get(i),value);
+            }
+
+            executeBlock(new BlockStmt(block));
+
+            variableStore=tempStorage;
+
+            return 0;
+
         }
         else if (expr instanceof VariableExpr) {
             String name = ((VariableExpr) expr).name;

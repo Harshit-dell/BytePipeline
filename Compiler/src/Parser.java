@@ -1,16 +1,6 @@
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-
-
-class Pair <V,K>{
-    V First;
-    K Second;
-    Pair(V first,K second){
-        this.First=first;
-        this.Second=second;
-    }
-}
-
 
 class Parser{
     private final Lexer lexer;
@@ -72,13 +62,9 @@ class Parser{
             }
         }
         eat(Token.Type.RBRACKET);
-        List<Stmt> block =parseProgram();
-        return new FunctionDelc(name,parameter,block);
+        BlockStmt body =blockParser();
+        return new FunctionDelc(name,parameter,body.statement);
     }
-
-
-
-
 
     private  Stmt parsewhile(){
         eat(Token.Type.WHILE);
@@ -151,19 +137,39 @@ class Parser{
 }
 
 
-private  VariableStmt VariableParser(){
-    String name=current.value;
-    eat(Token.Type.VARIABLE);
-    if(current.type==Token.Type.EQUALS){
-        eat(Token.Type.EQUALS);
-        Expr expr =parseAdditon();
-        eat(Token.Type.SEMICOLON);
-        return  new VariableStmt(name,expr);
+    private Stmt VariableParser(){
+        String name = current.value;
+        eat(Token.Type.VARIABLE);
+
+        if (current.type == Token.Type.SEMICOLON) {
+            eat(Token.Type.SEMICOLON);
+            return new VariableStmt(name);
+        }
+
+        if (current.type == Token.Type.LBRACKET) {
+            eat(Token.Type.LBRACKET);
+            List<Expr> args = new ArrayList<>();
+            if (current.type != Token.Type.RBRACKET) {
+                args.add(parseAdditon());
+                while (current.type == Token.Type.COMA) {
+                    eat(Token.Type.COMA);
+                    args.add(parseAdditon());
+                }
+            }
+            eat(Token.Type.RBRACKET);
+            eat(Token.Type.SEMICOLON);
+            return new ExprStmt(new FunctionCall(name, args));
+        }
+
+        if (current.type == Token.Type.EQUALS){
+            eat(Token.Type.EQUALS);
+            Expr expr = parseAdditon();
+            eat(Token.Type.SEMICOLON);
+            return new VariableStmt(name, expr);
+        }
+
+        throw new RuntimeException("Parser varibale error ");
     }
-    throw new RuntimeException("varibaleparser error");
-}
-
-
 
 // Parse a print statement
 public PrintStmt PrintParser() {
@@ -172,10 +178,6 @@ public PrintStmt PrintParser() {
     eat(Token.Type.SEMICOLON);
     return new PrintStmt(expr);
 }
-
-
-
-
 
 // (only + and - for now)
 private Expr parseAdditon() {
@@ -224,19 +226,6 @@ private Expr parseNumber() {
     else if (current.type == Token.Type.VARIABLE) {
         String name = current.value;
         eat(Token.Type.VARIABLE);
-        if (current.type == Token.Type.LBRACKET) {
-            eat(Token.Type.LBRACKET);
-            List<Expr> args = new ArrayList<>();
-            if (current.type != Token.Type.RBRACKET) {
-                args.add(parseAdditon()); // first arg
-                while (current.type == Token.Type.COMA) {
-                    eat(Token.Type.COMA);
-                    args.add(parseAdditon()); // more args
-                }
-            }
-            eat(Token.Type.RBRACKET);
-            return new FunctionCall(name, args);
-        }
         return new VariableExpr(name);
     }
     else if (current.type == Token.Type.LBRACKET) {

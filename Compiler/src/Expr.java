@@ -2,10 +2,26 @@ import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 import java.util.List;
 
+class Pair <V,K>{
+    V First;
+    K Second;
+    Pair(V first,K second){
+        this.First=first;
+        this.Second=second;
+    }
+}
+
 // Base class for expressions
 abstract  class Stmt {}
 abstract class Expr {}
 // Numbers like 1, 2, 42
+
+
+
+class ExprStmt extends Stmt {
+    Expr expr;
+    ExprStmt(Expr expr) { this.expr = expr; }
+}
 
 class FunctionDelc extends  Stmt{
     String name;
@@ -52,6 +68,10 @@ class VariableStmt extends Stmt {
     VariableStmt(String name, Expr value) {
         this.name = name;
         this.value = value;
+    }
+    VariableStmt(String name) {
+        this.name = name;
+        this.value =null;
     }
 }
 
