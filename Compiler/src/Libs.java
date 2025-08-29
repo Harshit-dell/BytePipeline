@@ -6,3 +6,10 @@ class Pair <V,K>{
         this.Second=second;
     }
 }
+class ReturnError extends  RuntimeException{
+    Object value;
+    ReturnError(Object value){
+        this.value=value;
+    }
+
+}

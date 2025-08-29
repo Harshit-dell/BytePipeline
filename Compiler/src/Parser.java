@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +43,21 @@ class Parser{
         else if (current.type ==Token.Type.FUN){
             return parseFunDlc();
         }
+        else  if(current.type== Token.Type.RETURN){
+            return parseReturn();
+        }
         throw new RuntimeException("starter-parser error (mostly error in the code you wrote )" );
+    }
+
+    private ReturnStmt parseReturn(){
+        eat(Token.Type.RETURN);
+        Expr expr =null;
+        //check if the return is not null value
+        if(current.type!= Token.Type.SEMICOLON){
+        expr =parseAdditon();
+        }
+        eat(Token.Type.SEMICOLON);
+        return new ReturnStmt(expr);
     }
 
 
@@ -145,22 +158,6 @@ class Parser{
             eat(Token.Type.SEMICOLON);
             return new VariableStmt(name);
         }
-
-        if (current.type == Token.Type.LBRACKET) {
-            eat(Token.Type.LBRACKET);
-            List<Expr> args = new ArrayList<>();
-            if (current.type != Token.Type.RBRACKET) {
-                args.add(parseAdditon());
-                while (current.type == Token.Type.COMA) {
-                    eat(Token.Type.COMA);
-                    args.add(parseAdditon());
-                }
-            }
-            eat(Token.Type.RBRACKET);
-            eat(Token.Type.SEMICOLON);
-            return new ExprStmt(new FunctionCall(name, args));
-        }
-
         if (current.type == Token.Type.EQUALS){
             eat(Token.Type.EQUALS);
             Expr expr = parseAdditon();
@@ -230,6 +227,19 @@ private Expr parseNumber() {
     else if (current.type == Token.Type.VARIABLE) {
         String name = current.value;
         eat(Token.Type.VARIABLE);
+        if (current.type == Token.Type.LBRACKET) {
+             eat(Token.Type.LBRACKET);
+            List<Expr> args = new ArrayList<>();
+            if (current.type != Token.Type.RBRACKET) {
+                args.add(parseAdditon());
+                while (current.type == Token.Type.COMA) {
+                    eat(Token.Type.COMA);
+                    args.add(parseAdditon());
+                }
+            }
+            eat(Token.Type.RBRACKET);
+            return new FunctionCall(name, args);   }
+
         return new VariableExpr(name);
     }
     else if (current.type == Token.Type.LBRACKET) {

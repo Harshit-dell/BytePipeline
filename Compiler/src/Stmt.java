@@ -2,11 +2,19 @@ import java.util.List;
 
 abstract  class Stmt {}
 
+class ReturnStmt extends  Stmt{
+    Expr value;
+    ReturnStmt(Expr expr){
+        this.value=expr;
+    }
+//    ReturnStmt(){
+//        this.expr=null;
+//  } handeled this case in the parser side
+}
 class ExprStmt extends Stmt {
     Expr expr;
     ExprStmt(Expr expr) { this.expr = expr; }
 }
-
 
 class FunctionDelc extends  Stmt{
     String name;

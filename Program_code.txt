@@ -1,2 +1,4 @@
-x="harshit";
-tell x+10;
+fun add(a, b) {
+    tell "Hello";
+}
+tell add(3, 4);

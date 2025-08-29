@@ -45,10 +45,23 @@ public class Interpreter {
         else if (stmt instanceof ExprStmt) {
             evaluate(((ExprStmt) stmt).expr);
         }
+        else if (stmt instanceof ReturnStmt) {
+            Object value = null;
+            if (((ReturnStmt) stmt).value != null) {
+                value = evaluate(((ReturnStmt) stmt).value);
+            }
+            throw new ReturnError(value);
+        }
 
         else {
             throw new RuntimeException("Check-Interpreter fault");
         }
+    }
+    private  void executeReturn(ReturnStmt stmt){
+
+
+
+
     }
 
     private void executeSpin(SpinStmt stmt) {
@@ -121,8 +134,12 @@ public class Interpreter {
                 variableStore.put(parameter.get(i), value);
             }
 
-            executeBlock(new BlockStmt(block));
-
+            try{
+                executeBlock(new BlockStmt(block));
+            }
+            catch(ReturnError e){
+                return e.value;
+            }
             variableStore = tempStorage;
 
             return 0;
@@ -180,8 +197,8 @@ public class Interpreter {
         if (obj instanceof String) {
             try {
                 return Integer.parseInt((String) obj);
-            } catch (NumberFormatException e) {
-                return ((String) obj).isEmpty() ? 0 : 1; // non-empty string treated as true
+            } catch (Exception e) {
+                return ((String) obj).isEmpty() ? 0 : 1; //non empty string as true
             }
         }
         throw new RuntimeException("Cannot convert to int: " + obj);
