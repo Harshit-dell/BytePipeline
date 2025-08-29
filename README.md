@@ -21,6 +21,7 @@ Originally designed for arithmetic evaluation, BytePipeline has evolved into a m
 - **Control flow** (if/else, spin loops)
 - **Blocks & scoping**
 - **Function calls**
+- **Recursion**
 - **IDE-integrated tooling** (experimental) via an IDEA-configurable syntax framework
 
 > This project is not about frameworks — it’s about understanding how languages work from scratch.
@@ -50,6 +51,7 @@ Originally designed for arithmetic evaluation, BytePipeline has evolved into a m
 ### Functions
 - Function declarations with parameters
 - Function calls with arguments
+- Function return the value
 
 ### Expressions
 - Arithmetic (`+`, `-`, `*`, `/`)

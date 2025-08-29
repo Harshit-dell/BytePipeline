@@ -1,4 +1,26 @@
-fun add(a, b) {
-    tell a+b;
+fun fact(n) {
+    flip(n == 0) {
+        return 1;
+    }
+    flop {
+        return n * fact(n - 1);
+    }
 }
-tell add(3, 4);
+
+ a = 5;
+tell fact(a);
+
+sum = 0;
+ i = 1;
+spin(i <= 5) {
+    sum = sum + i;
+    i = i + 1;
+}
+tell sum;
+
+flip (sum > 10) {
+    tell "Sum is large";
+}
+flop{
+    tell "Sum is small";
+}
