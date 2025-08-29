@@ -1,4 +1,4 @@
 fun add(a, b) {
-    tell "Hello";
+    tell a+b;
 }
 tell add(3, 4);
